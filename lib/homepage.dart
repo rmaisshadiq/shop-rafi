@@ -79,27 +79,27 @@ class _HomePageState extends State<HomePage> {
       {
         'name': 'Elektronik',
         'icon': 'lib/images/ic_laptop.png',
-        'page': const GridElektronik()
+        'page': const GridElektronik(),
       },
       {
         'name': 'Baju Pria',
         'icon': 'lib/images/ic_cloth.png',
-        'page': const GridBajuPria()
+        'page': const GridBajuPria(),
       },
       {
         'name': 'Baju Wanita',
         'icon': 'lib/images/ic_dress.png',
-        'page': const GridBajuWanita()
+        'page': const GridBajuWanita(),
       },
       {
         'name': 'Sepatu Pria',
         'icon': 'lib/images/ic_shoes.png',
-        'page': const GridSepatuPria()
+        'page': const GridSepatuPria(),
       },
       {
         'name': 'Sepatu Wanita',
         'icon': 'lib/images/ic_heels.png',
-        'page': const GridSepatuWanita()
+        'page': const GridSepatuWanita(),
       },
     ];
 
@@ -188,7 +188,11 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: categories.map((cat) {
                     return _buildCategoryCard(
-                        context, cat['name'], cat['icon'], cat['page']);
+                      context,
+                      cat['name'],
+                      cat['icon'],
+                      cat['page'],
+                    );
                   }).toList(),
                 ),
               ),
@@ -234,22 +238,25 @@ class _HomePageState extends State<HomePage> {
                             Widget? targetPage;
                             String category = productItem['category'];
 
-                            if (category == 'Elektronik') {
-                              targetPage = const GridElektronik();
-                            } else if (category == 'Baju Pria') {
-                              targetPage = const GridBajuPria();
-                            } else if (category == 'Baju Wanita') {
-                              targetPage = const GridBajuWanita();
-                            } else if (category == 'Sepatu Pria') {
-                              targetPage = const GridSepatuPria();
-                            } else if (category == 'Sepatu Wanita') {
-                              targetPage = const GridSepatuWanita();
+                            if (category == 'electronic') {
+                              targetPage = DetailElektronik(item: productItem);
+                            } else if (category == 'baju pria') {
+                              targetPage = DetailBajuPria(item: productItem);
+                            } else if (category == 'baju wanita') {
+                              targetPage = DetailBajuWanita(item: productItem);
+                            } else if (category == 'sepatu pria') {
+                              targetPage = DetailSepatuPria(item: productItem);
+                            } else if (category == 'sepatu wanita') {
+                              targetPage = DetailSepatuWanita(
+                                item: productItem,
+                              );
                             }
 
                             if (targetPage != null) {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (context) => targetPage!),
+                                  builder: (context) => targetPage!,
+                                ),
                               );
                             }
                           },
@@ -322,16 +329,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildCategoryCard(
-      BuildContext context, String title, String iconPath, Widget targetPage) {
+    BuildContext context,
+    String title,
+    String iconPath,
+    Widget targetPage,
+  ) {
     return Card(
       elevation: 5,
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => targetPage,
-            ),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => targetPage));
         },
         child: SizedBox(
           height: 80,
@@ -339,11 +348,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset(
-                iconPath,
-                height: 45,
-                width: 45,
-              ),
+              Image.asset(iconPath, height: 45, width: 45),
               const SizedBox(height: 5),
               Text(
                 title,
@@ -361,4 +366,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
