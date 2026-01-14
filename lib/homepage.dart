@@ -55,7 +55,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getProductItem() async {
-    String urlProductItem = "http://10.0.2.2:3000/products";
+    String urlProductItem =
+        "https://backend-shop-production-fbd7.up.railway.app/products";
     try {
       var response = await http.get(Uri.parse(urlProductItem));
 

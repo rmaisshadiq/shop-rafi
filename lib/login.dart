@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    String url = "http://10.0.2.2:3000/login";
+    String url = "https://backend-shop-production-fbd7.up.railway.app/login";
 
     try {
       var response = await http.post(

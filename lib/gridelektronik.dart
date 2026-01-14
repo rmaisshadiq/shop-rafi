@@ -20,7 +20,8 @@ class _GridElektronikState extends State<GridElektronik> {
   List<dynamic> electronicProduct = [];
 
   Future<void> getElectronic() async {
-    String urlElectronic = "http://10.0.2.2:3000/products/electronics";
+    String urlElectronic =
+        "https://backend-shop-production-fbd7.up.railway.app/products/electronics";
     try {
       var response = await http.get(Uri.parse(urlElectronic));
       if (response.statusCode == 200) {

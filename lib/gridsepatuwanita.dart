@@ -20,7 +20,8 @@ class _GridSepatuWanitaState extends State<GridSepatuWanita> {
   List<dynamic> sepatuWanitaProduct = [];
 
   Future<void> getSepatuWanita() async {
-    String urlSepatuWanita = "http://10.0.2.2:3000/products/heels";
+    String urlSepatuWanita =
+        "https://backend-shop-production-fbd7.up.railway.app/products/heels";
     try {
       var response = await http.get(Uri.parse(urlSepatuWanita));
       if (response.statusCode == 200) {

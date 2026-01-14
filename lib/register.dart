@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
       _isLoading = true;
     });
 
-    String url = "http://10.0.2.2:3000/register";
+    String url = "https://backend-shop-production-fbd7.up.railway.app/register";
 
     try {
       var response = await http.post(
