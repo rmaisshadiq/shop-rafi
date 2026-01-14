@@ -17,7 +17,8 @@ class _GridSepatuWanitaState extends State<GridSepatuWanita> {
   List<dynamic> sepatuWanitaProduct = [];
 
   Future<void> getSepatuWanita() async {
-    String urlSepatuWanita = "http://10.0.2.2/servershop_rafi/getsepatuwanita.php";
+    String urlSepatuWanita =
+        "http://10.0.2.2/servershop_rafi/getsepatuwanita.php";
     try {
       var response = await http.get(Uri.parse(urlSepatuWanita));
       setState(() {
@@ -207,7 +208,7 @@ class DetailSepatuWanita extends StatelessWidget {
               fit: BoxFit.fill,
             ),
           ),
-          C(
+          Padding(
             padding: EdgeInsets.only(left: 25, top: 20),
             child: Text(
               "Product Description",
