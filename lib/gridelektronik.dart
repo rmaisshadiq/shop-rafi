@@ -17,12 +17,16 @@ class _GridElektronikState extends State<GridElektronik> {
   List<dynamic> electronicProduct = [];
 
   Future<void> getElectronic() async {
-    String urlElectronic = "http://10.0.2.2/servershop_rafi/getelectronic.php";
+    String urlElectronic = "http://10.0.2.2:3000/products/electronics";
     try {
       var response = await http.get(Uri.parse(urlElectronic));
-      setState(() {
-        electronicProduct = json.decode(response.body);
-      });
+      if (response.statusCode == 200) {
+        setState(() {
+          var jsonResponse = json.decode(response.body);
+
+          electronicProduct = jsonResponse['data'];
+        });
+      }
     } catch (exc) {
       if (kDebugMode) {
         print(exc);

@@ -17,12 +17,16 @@ class _GridSepatuPriaState extends State<GridSepatuPria> {
   List<dynamic> sepatuPriaProduct = [];
 
   Future<void> getSepatuPria() async {
-    String urlSepatuPria = "http://10.0.2.2/servershop_rafi/getsepatupria.php";
+    String urlSepatuPria = "http://10.0.2.2:3000/products/shoes";
     try {
       var response = await http.get(Uri.parse(urlSepatuPria));
-      setState(() {
-        sepatuPriaProduct = json.decode(response.body);
-      });
+      if (response.statusCode == 200) {
+        setState(() {
+          var jsonResponse = json.decode(response.body);
+
+          sepatuPriaProduct = jsonResponse['data'];
+        });
+      }
     } catch (exc) {
       if (kDebugMode) {
         print(exc);
