@@ -54,12 +54,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getProductItem() async {
-    String urlProductItem = "http://10.0.2.2/servershop_rafi/allproduct.php";
+    String urlProductItem = "http://10.0.2.2:3000/products";
     try {
       var response = await http.get(Uri.parse(urlProductItem));
-      setState(() {
-        listProductItem = json.decode(response.body);
-      });
+
+      if (response.statusCode == 200) {
+        setState(() {
+          var jsonResponse = json.decode(response.body);
+
+          listProductItem = jsonResponse['data'];
+        });
+      }
     } catch (exc) {
       if (kDebugMode) {
         print(exc);
