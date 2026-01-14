@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shop_rafi/homepage.dart';
 import 'package:shop_rafi/register.dart';
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Opsional tapi PENTING buat simpen sesi login
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -15,21 +19,61 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   void _login() async {
-    // TODO: Implement API Login Logic here
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Email dan Password harus diisi!")),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    // Simulate delay
-    await Future.delayed(const Duration(seconds: 2));
+    String url = "http://10.0.2.2:3000/login";
 
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": _emailController.text,
+          "password": _passwordController.text,
+        }),
       );
+
+      var data = jsonDecode(response.body);
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (response.statusCode == 200) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('userId', data['data']['id']);
+          await prefs.setString('userName', data['data']['name']);
+          await prefs.setString('userEmail', data['data']['email']);
+          await prefs.setBool('isLogin', true);
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        } else {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Gagal: ${data['message']}")));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: Pastikan Backend Nyala!")),
+        );
+      }
     }
   }
 
@@ -43,10 +87,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.asset(
-                'lib/images/tokopedia.png', // Reusing logo
-                height: 100,
-              ),
+              Image.asset('lib/images/tokopedia.png', height: 100),
               const SizedBox(height: 48),
               const Text(
                 "Welcome Back!",

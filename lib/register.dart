@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,23 +18,52 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isLoading = false;
 
   void _register() async {
-    // TODO: Implement API Register Logic here
     setState(() {
       _isLoading = true;
     });
 
-    // Simulate delay
-    await Future.delayed(const Duration(seconds: 2));
+    String url = "http://10.0.2.2:3000/register";
 
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-      // Pop back to login after registration
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Registration Successful! Please Login.")),
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": _nameController.text,
+          "email": _emailController.text,
+          "password": _passwordController.text,
+          "phone": _phoneController.text,
+          "address": _addressController.text,
+        }),
       );
+
+      var data = jsonDecode(response.body);
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (response.statusCode == 201) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Berhasil! Silakan Login.")));
+        } else {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Gagal: ${data['message']}")));
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error Koneksi: $e")));
+      }
     }
   }
 
