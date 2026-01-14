@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:provider/provider.dart';
+import 'package:shop_rafi/cart_page.dart';
 import 'package:shop_rafi/homepage.dart';
+import 'package:shop_rafi/providers/cart_provider.dart';
 
 class GridSepatuPria extends StatefulWidget {
   const GridSepatuPria({super.key});
@@ -72,7 +75,11 @@ class _GridSepatuPriaState extends State<GridSepatuPria> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => const CartPage()));
+            },
             icon: const Icon(
               Icons.shopping_cart,
               color: Colors.white,
@@ -282,9 +289,14 @@ class DetailSepatuPria extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const GridSepatuPria(),
+                  Provider.of<CartProvider>(
+                    context,
+                    listen: false,
+                  ).addToCart(item);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Item added to cart"),
+                      duration: Duration(seconds: 1),
                     ),
                   );
                 },

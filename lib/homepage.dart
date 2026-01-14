@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_rafi/cart_page.dart';
 import 'package:shop_rafi/gridbajupria.dart';
 import 'package:shop_rafi/gridbajuwanita.dart';
 import 'dart:convert';
@@ -138,7 +139,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => const CartPage()));
+            },
             icon: const Icon(
               Icons.shopping_cart,
               color: Colors.white,
