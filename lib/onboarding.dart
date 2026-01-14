@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_rafi/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_rafi/login.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -65,6 +66,16 @@ class _OnBoardingState extends State<OnBoarding> {
     super.dispose();
   }
 
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFirstRun', false);
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,25 +95,21 @@ class _OnBoardingState extends State<OnBoarding> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 indexPage == boardingData.length - 1
                     ? TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                        child: Text("Get Started"),
+                        onPressed: _completeOnboarding,
+                        child: const Text("Get Started"),
                       )
-                    : Text(""),
+                    : const Text(""),
                 Row(
                   children: List.generate(
                     boardingData.length,
                     (index) => Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
                       width: 10,
                       height: 10,
                       decoration: BoxDecoration(
@@ -117,17 +124,15 @@ class _OnBoardingState extends State<OnBoarding> {
                 IconButton(
                   onPressed: () {
                     if (indexPage == boardingData.length - 1) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
+                      _completeOnboarding();
                     } else {
                       boardController.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                       );
                     }
                   },
-                  icon: Icon(Icons.arrow_forward),
+                  icon: const Icon(Icons.arrow_forward),
                 ),
               ],
             ),

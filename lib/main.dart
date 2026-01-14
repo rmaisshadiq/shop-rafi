@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_rafi/onboarding.dart';
+import 'package:shop_rafi/splashscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const OnBoarding(),
+      home: const SplashScreen(),
     );
   }
 }
