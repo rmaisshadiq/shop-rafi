@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartProvider extends ChangeNotifier {
   final List<Map<String, dynamic>> _cartItems = [];
@@ -17,7 +20,6 @@ class CartProvider extends ChangeNotifier {
 
   double get totalPrice {
     return _cartItems.fold(0, (total, item) {
-      // Handle potential String/int/double types for price
       var price = item['promo'];
       price ??= item['price'];
       if (price is String) {
@@ -29,5 +31,36 @@ class CartProvider extends ChangeNotifier {
       }
       return total;
     });
+  }
+
+  Future<String?> checkout() async {
+    final url = "https://backend-shop-production-fbd7.up.railway.app/checkout";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt('userId');
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "user_id": userId,
+          "items": _cartItems,
+          "total_amount": totalPrice,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        _cartItems.clear();
+        notifyListeners();
+        return data['payment_url'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error Provider: $e");
+      return null;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_rafi/payment.dart';
 import 'package:shop_rafi/providers/cart_provider.dart';
 
 class CartPage extends StatelessWidget {
@@ -106,13 +107,31 @@ class CartPage extends StatelessWidget {
                           backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(vertical: 15),
                         ),
-                        onPressed: () {
-                          // TODO: Implement Checkout
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Checkout not implemented yet"),
-                            ),
+                        onPressed: () async {
+                          final cartProvider = Provider.of<CartProvider>(
+                            context,
+                            listen: false,
                           );
+
+                          if (cartProvider.cartItems.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Keranjang kosong bro!")),
+                            );
+                            return;
+                          }
+                          String? paymentUrl = await cartProvider.checkout();
+
+                          if (!context.mounted) return;
+
+                          if (paymentUrl != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PaymentWebviewPage(url: paymentUrl),
+                              ),
+                            );
+                          }
                         },
                         child: const Text(
                           "Checkout",
