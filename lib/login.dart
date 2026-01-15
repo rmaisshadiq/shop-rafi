@@ -4,7 +4,7 @@ import 'package:shop_rafi/register.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Opsional tapi PENTING buat simpen sesi login
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

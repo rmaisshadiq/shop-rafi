@@ -17,19 +17,18 @@ class _PaymentWebviewPageState extends State<PaymentWebviewPage> {
   void initState() {
     super.initState();
     controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted) // Midtrans butuh JS
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (String url) {
-            setState(() => _isLoading = false); // Loading kelar
+            setState(() => _isLoading = false);
 
-            // OPTIONAL: Auto close kalo sukses (cek URL redirect Midtrans)
             if (url.contains('status_code=200') ||
                 url.contains('transaction_status=settlement')) {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text("Pembayaran Berhasil!")));
-              Navigator.pop(context); // Tutup halaman
+              Navigator.pop(context);
             }
           },
         ),
